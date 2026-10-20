@@ -1,0 +1,15 @@
+:root{--g:#16834A;--dg:#105C38;--ag:#32B768;--bg:#F7FAF8;--tx:#17231C;--t2:#647067;--bd:#E1EAE3;--err:#D64545}
+*{box-sizing:border-box}body{margin:0;font:17px/1.6 Nunito,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:grid;grid-template-rows:auto 1fr auto}
+h1,h2,.logo,.btn,.tab{font-family:Fredoka,Nunito,sans-serif}h1{color:var(--dg);font-size:30px;margin:0 0 4px}a{color:var(--g)}
+header{background:#fff;border-bottom:2px solid var(--bd);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;max-width:none}
+.logo{font-weight:700;font-size:24px;color:var(--dg);text-decoration:none;display:flex;gap:8px;align-items:center}
+main{display:grid;place-items:center;padding:24px 14px;background:linear-gradient(135deg,#E8F5EC,#F7FAF8 65%)}
+.card{background:#fff;border:2px solid var(--bd);border-radius:24px;padding:24px;width:100%;max-width:440px}
+.tabs{display:flex;gap:6px;background:#E8F5EC;border-radius:999px;padding:4px;margin:14px 0}.tab{flex:1;text-align:center;padding:8px;border-radius:999px;font-weight:600;color:var(--dg);text-decoration:none}.tab.on{background:var(--g);color:#fff}
+label{display:block;font-weight:800;font-size:14px;margin:12px 0 4px}
+input,select{width:100%;min-height:46px;padding:10px 12px;border:2px solid var(--bd);border-radius:12px;font:inherit;background:#fff}input:focus,select:focus{outline:none;border-color:var(--ag)}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}.pw{position:relative}.pw button{position:absolute;right:8px;top:7px;border:0;background:none;color:var(--g);font-weight:800;cursor:pointer;min-height:32px}
+.btn{width:100%;min-height:48px;border-radius:999px;border:2px solid var(--g);background:var(--g);color:#fff;font-size:18px;font-weight:600;cursor:pointer;margin-top:16px}.btn:disabled{opacity:.6}
+.meta{color:var(--t2);font-size:15px}.note{background:#FFF4DE;border:2px solid #E9A23B;border-radius:12px;padding:10px 12px;font-size:15px;margin-bottom:10px}
+.msg{border-radius:12px;padding:10px 12px;margin-top:12px;font-size:15px;display:none}.msg.err{display:block;background:#FDECEC;color:var(--err)}.msg.ok{display:block;background:#E8F5EC;color:var(--dg)}
+footer{text-align:center;padding:16px;color:var(--t2);font-size:14px}footer b{font-family:Fredoka;color:var(--dg);font-size:16px}
