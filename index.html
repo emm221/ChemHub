@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ChemHub | Chemistry Resource Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<link rel="stylesheet" href="style.css"></head><body>
+<header><div class="bar"><a class="logo" href="#home"><svg width="30" height="30" viewBox="0 0 26 26"><g stroke="#16834A" stroke-width="2.5" fill="none"><path d="M13 4v8l-7 5M13 12l7 5"/></g><circle cx="13" cy="4" r="3.5" fill="#105C38"/><circle cx="5" cy="19" r="3.5" fill="#32B768"/><circle cx="21" cy="19" r="3.5" fill="#16834A"/></svg>ChemHub</a>
+<nav id="nav"><a href="#courses">Course Library</a><a href="#quiz">Quick Quiz</a><a href="#resources">Resources</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
+<div class="sp"><button class="btn sm" id="authbtn" onclick="openAuth()">Student Sign In</button><button class="btn alt sm" id="burger" onclick="nav.classList.toggle('open')">Menu</button></div></div></header>
+<main id="home">
+<section style="padding-bottom:0"><div class="hero"><div><span class="chip">Curiosity meets Chemistry</span><h1>Discover the chemistry around you.</h1>
+<p>Your friendly learning space for Chemistry courses, study materials, and the science behind everyday life, made for students at Federal University of Lafia.</p>
+<p><a class="btn" href="#courses">Explore Course Library</a> <a class="btn alt" href="#" onclick="openAuth('up');return false">Join ChemHub</a></p><p><span class="credit">Created by Emmanuel Musa</span></p></div>
+<svg viewBox="0 0 340 320" role="img" aria-label="Bubbling flask"><g class="float"><path d="M140 40h60v70l60 120a22 22 0 0 1-20 32H100a22 22 0 0 1-20-32l60-120z" fill="#fff" stroke="#105C38" stroke-width="5" stroke-linejoin="round"/><path d="M104 190h132l24 48a22 22 0 0 1-20 32H100a22 22 0 0 1-20-32z" fill="#32B768" opacity=".85"/><rect x="132" y="32" width="76" height="12" rx="6" fill="#105C38"/><circle class="bub" cx="150" cy="200" r="8" fill="#fff"/><circle class="bub" cx="180" cy="215" r="6" fill="#fff"/><circle class="bub" cx="205" cy="195" r="9" fill="#fff"/></g>
+<g stroke="#16834A" stroke-width="4"><path d="M40 70l36 22M76 92l-6 40M76 92l40-8"/></g><circle cx="40" cy="70" r="14" fill="#105C38"/><circle cx="76" cy="92" r="16" fill="#32B768"/><circle cx="70" cy="132" r="11" fill="#E9A23B"/><circle cx="116" cy="84" r="11" fill="#16834A"/>
+<g stroke="#16834A" stroke-width="4"><path d="M285 60l-24 30M261 90l36 14"/></g><circle cx="285" cy="60" r="12" fill="#E9A23B"/><circle cx="261" cy="90" r="15" fill="#16834A"/><circle cx="297" cy="104" r="11" fill="#32B768"/></svg></div>
+<div class="els"><div class="el" style="--c:#16834A"><b>H</b><small>Hydrogen</small></div><div class="el" style="--c:#105C38"><b>C</b><small>Carbon</small></div><div class="el" style="--c:#32B768"><b>O</b><small>Oxygen</small></div><div class="el" style="--c:#E9A23B"><b>Na</b><small>Sodium</small></div><div class="el" style="--c:#16834A"><b>Cl</b><small>Chlorine</small></div><div class="el" style="--c:#D64545"><b>Fe</b><small>Iron</small></div><div class="el" style="--c:#E9A23B"><b>Au</b><small>Gold</small></div></div></section>
+
+<section><div class="row" style="align-items:center;gap:28px"><div><span class="chip">The ChemHub idea</span><h2>Make Chemistry easier to explore.</h2><p>Chemistry explains the materials we use, the reactions around us, the food we eat, and the world we live in. ChemHub brings learning resources and simple explanations into one accessible space for Chemistry students.</p></div>
+<p class="quote">The important thing is to never stop questioning. Keep asking why. Keep testing ideas.</p></div></section>
+
+<section><span class="chip">Chemistry in daily life</span><h2>Science is closer than you think.</h2><p class="meta">Tap "How it works" on a card to see the chemistry and a simple way to try it.</p><div class="grid" id="daily"></div></section>
+
+<section id="courses"><span class="chip">Your course library</span><h2>Find your next study session.</h2><p class="meta">Courses are added by ChemHub administrators from the department's real catalogue.</p>
+<input id="cq" placeholder="Search by course code or title" style="margin:8px 0"><div id="lvchips"></div><div class="grid" id="clist"></div></section>
+
+<section id="quiz"><span class="chip">Test your knowledge</span><h2>Quick Chemistry Quiz.</h2><div class="card" id="qbox" style="max-width:560px"></div></section>
+
+<section id="resources"><span class="chip">Learning materials</span><h2>Resources for your journey.</h2><div class="row" style="margin:8px 0"><input id="rq" placeholder="Search title, course code, description, tags"><select id="rc"></select></div><div class="grid" id="rlist"></div></section>
+
+<section id="about"><span class="chip">About ChemHub</span><h2>A learning space built around Chemistry.</h2>
+<p style="max-width:62ch">ChemHub is a digital academic resource initiative that makes Chemistry learning resources easier to find and explore. It brings course information, study materials, practical guides, past questions, and revision activities together in one place. It is not an official FULAFIA platform unless formally authorized.</p>
+<h3>Project Creator</h3><p><span class="credit">Created by Emmanuel Musa</span></p></section>
+
+<section id="contact"><span class="chip">Get in touch</span><h2>Have a question or suggestion?</h2><form class="card" id="cf" style="max-width:520px"><label>Your name</label><input name="n" required><label>Subject</label><input name="s" required><label>Message</label><textarea name="m" rows="4" required></textarea><p><button class="btn">Prepare message</button></p><p class="meta">This opens your email app. Nothing is sent from the website.</p></form></section>
+</main>
+<footer><div class="in"><div><strong style="color:#fff;font:600 20px Fredoka">ChemHub — Chemistry Resource Centre</strong><br>An academic resource initiative for Chemistry students at Federal University of Lafia. Not an official university platform.</div>
+<div><a href="#courses">Courses</a><a href="#resources">Resources</a><a href="#quiz">Quiz</a><a href="#about">About</a><a href="#contact">Contact</a></div><div><span class="credit">Created by Emmanuel Musa</span> &copy; <span id="yr"></span></div></div></footer>
+<div id="modal"><div id="box"></div></div><div id="toast"></div>
+<script src="app1.js"></script>
+<script src="app2.js"></script>
+<script src="app3.js"></script>
+<script src="app4.js"></script></body></html>
+  
