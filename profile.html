@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My profile | ChemHub</title>
+<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<link rel="stylesheet" href="profile.css"></head><body>
+<header><a class="logo" href="index.html"><svg width="30" height="30" viewBox="0 0 26 26"><g stroke="#16834A" stroke-width="2.5" fill="none"><path d="M13 4v8l-7 5M13 12l7 5"/></g><circle cx="13" cy="4" r="3.5" fill="#105C38"/><circle cx="5" cy="19" r="3.5" fill="#32B768"/><circle cx="21" cy="19" r="3.5" fill="#16834A"/></svg>ChemHub</a>
+<div><a href="index.html">&larr; Home</a> &nbsp; <button class="btn alt sm" id="so">Sign out</button></div></header>
+<main id="app"><div class="card">Loading your profile...</div></main>
+<footer><b>ChemHub</b> &middot; Created by Emmanuel Musa &middot; Not an official FULAFIA platform</footer><div id="toast"></div>
+<script>
+const {SUPABASE_URL="YOUR_SUPABASE_URL",SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"}=window.CHEMHUB_CONFIG||{};
+const ok=!SUPABASE_URL.startsWith("YOUR_"),sb=ok?supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null,$=s=>document.querySelector(s),app=$('#app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(m,e){const t=$('#toast');t.textContent=m;t.className=e?'err':'';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',4500)}
+let me,prof;
+async function init(){
+  if(!ok){app.innerHTML='<div class="card"><h2>Supabase is not connected</h2><p>Fill in config.js (see README), then reload.</p></div>';return}
+  const{data}=await sb.auth.getSession();me=data.session?.user;if(!me){location.href='auth.html#login';return}
+  const r=await sb.from('profiles').select('*').eq('id',me.id).single();prof=r.data;
+  if(!prof||!prof.active){await sb.auth.signOut();location.href='auth.html#login';return}
+  draw();saved();
+}
+function draw(){
+  app.innerHTML=`<div class="card"><h1>${esc(prof.full_name)}</h1><p class="meta"><span class="chip">${esc(prof.department)}</span><span class="chip">${prof.level||'-'} Level</span><span class="chip">${esc(prof.role)}</span></p>
+<h2>Edit profile</h2><form id="pf"><label>Full name</label><input name="n" value="${esc(prof.full_name)}" required minlength="3" maxlength="100">
+<div class="row"><div><label>Level</label><select name="l">${[100,200,300,400,500].map(l=>`<option value="${l}" ${prof.level==l?'selected':''}>${l} Level</option>`).join('')}</select></div><div><label>Department</label><input value="${esc(prof.department)}" disabled></div></div>
+<label>Matriculation number (private, visible only to you and administrators)</label><input name="m" value="${esc(prof.matric_no)}" maxlength="40"><label>Email</label><input value="${esc(me.email)}" disabled>
+<button class="btn">Save changes</button></form></div>
+<div class="card"><h2>Change password</h2><form id="pw"><label>New password (at least 8 characters)</label><input type="password" name="p" minlength="8" required autocomplete="new-password"><label>Confirm new password</label><input type="password" name="p2" required autocomplete="new-password"><button class="btn">Update password</button></form></div>
+<div class="card"><h2>Saved resources</h2><div id="sv" class="meta">Loading...</div></div>`;
+  $('#pf').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),b=e.target.querySelector('button');b.disabled=true;
+    const{error}=await sb.from('profiles').update({full_name:f.get('n').trim(),level:+f.get('l'),matric_no:f.get('m').trim()||null}).eq('id',me.id);b.disabled=false;
+    if(error)return toast(error.message,true);prof={...prof,full_name:f.get('n').trim(),level:+f.get('l'),matric_no:f.get('m').trim()||null};toast('Profile saved.');draw();saved()};
+  $('#pw').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);if(f.get('p')!==f.get('p2'))return toast('Passwords do not match.',true);
+    const{error}=await sb.auth.updateUser({password:f.get('p')});error?toast(error.message,true):(toast('Password updated.'),e.target.reset())};
+}
+async function saved(){
+  const{data,error}=await sb.from('bookmarks').select('resource_id, resources(id,title,file_type,level,semester,courses(code))').order('created_at',{ascending:false});
+  const rows=(data||[]).filter(b=>b.resources);
+  $('#sv').innerHTML=error?esc(error.message):rows.length?rows.map(b=>{const r=b.resources;return`<div class="item"><div><strong>${esc(r.title)}</strong><br><span class="chip">${esc(r.courses?.code||'No course')}</span><span class="chip">${r.level||'All'} L</span><span class="chip">${esc(r.file_type||'file')}</span></div><div><button class="btn sm" data-a="dl" data-id="${r.id}">Download</button> <button class="btn alt sm" data-a="rm" data-id="${r.id}">Remove</button></div></div>`}).join(''):'<div class="empty">Nothing saved yet. Use "Save" on any resource in the library.</div>';
+}
+$('#sv').addEventListener('click',async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const id=b.dataset.id;
+  if(b.dataset.a==='rm'){const{error}=await sb.from('bookmarks').delete().match({user_id:me.id,resource_id:id});error?toast(error.message,true):(toast('Removed.'),saved())}
+  else{const{data:r}=await sb.from('resources').select('file_path').eq('id',id).single();const{data,error}=await sb.storage.from('resources').createSignedUrl(r?.file_path||'',120);if(error||!data)return toast('This file is missing or unavailable.',true);window.open(data.signedUrl,'_blank')}});
+$('#so').onclick=async()=>{if(sb)await sb.auth.signOut();location.href='index.html'};
+init();
+</script></body></html>
