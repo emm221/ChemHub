@@ -4,5 +4,5 @@
 window.CHEMHUB_CONFIG = {
   SUPABASE_URL: "https://ummzitesnagfmloelajz.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtbXppdGVzbmFnZm1sb2VsYWp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTMzNjksImV4cCI6MjEwODA2OTM2OX0.3fcQabXCopltDU14lPB962PZc1zU87nKzwUh8HGuPOE",
-  CONTACT_EMAIL: "" // address that receives Contact form emails (optional)
+  CONTACT_EMAIL: "emmanuelmusa221006@gmail.com" // address that receives Contact form emails (optional)
 };
