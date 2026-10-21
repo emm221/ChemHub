@@ -8,7 +8,7 @@ $('#cf').onsubmit=e=>{e.preventDefault();if(!CONTACT_EMAIL)return toast('Set CON
 // Courses
 function drawCourses(){const t=$('#cq').value.toLowerCase();$('#lvchips').innerHTML=['',...L].map(l=>`<span class="chip ${lv==l?'on':''}" onclick="lv='${l}';drawCourses()">${l?l+' Level':'All levels'}</span>`).join('');
 const r=COURSES.filter(c=>(!lv||c.level==lv)&&(c.code+c.title).toLowerCase().includes(t));
-$('#clist').innerHTML=r.length?r.map(c=>`<div class="card"><span class="chip">${c.level} L &middot; Sem ${c.semester}</span><h3>${esc(c.code)}</h3><p>${esc(c.title)}</p><a href="#resources" class="seeres" data-code="${esc(c.code)}">See resources</a></div>`).join(''):`<div class="empty">${ok?(COURSES.length?'No courses match your search.':'No courses have been added yet. An administrator can add the catalogue.'):'Connect Supabase to load courses (see README).'}</div>`}
+$('#clist').innerHTML=r.length?r.map(c=>`<div class="card"><span class="chip">${c.level} L &middot; Sem ${c.semester}</span><h3>${esc(c.code)}</h3><p>${esc(c.title)}</p><a href="#resources" class="seeres" data-code="${esc(c.code)}">See resources</a></div>`).join(''):`<div class="empty">${ok?(COURSES.length?'No courses match your search.':'The course catalogue is coming soon. Please check back shortly.'):'Connect Supabase to load courses (see README).'}</div>`}
 $('#cq').oninput=drawCourses;
 $('#clist').addEventListener('click',e=>{const a=e.target.closest('.seeres');if(a){$('#rq').value=a.dataset.code;drawRes()}});
 // Resources
@@ -21,3 +21,4 @@ async function mark(id){const{error}=await sb.from('bookmarks').insert({user_id:
 async function loadData(){if(!ok){drawCourses();drawRes();return}
 const[a,b,c]=await Promise.all([sb.from('courses').select('*').eq('published',true).order('level').order('code'),sb.from('resource_categories').select('*').order('id'),sb.from('resources').select('*, courses(code)').eq('published',true).order('created_at',{ascending:false}).limit(200)]);
 COURSES=a.data||[];(b.data||[]).forEach(x=>CATS[x.id]=x.name);RES=c.data||[];$('#rc').innerHTML='<option value="">All resource types</option>'+Object.entries(CATS).map(([i,n])=>`<option value="${i}">${n}</option>`).join('');drawCourses();drawRes()}
+  
